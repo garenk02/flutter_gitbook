@@ -8,54 +8,39 @@ void main() {
   );
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
+  @override
+  AwesomeButtonState createState() => new AwesomeButtonState();
+}
+
+class AwesomeButtonState extends State<MyApp> {
+  int counter = 0;
+  List<String> strings = ["Flutter", "Is", "Awesome"];
+  String displayedString = "";
+
+  void onPressed() {
+    setState(() {
+      displayedString = strings[counter];
+      counter = counter < 2 ? counter+1 : 0;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      appBar: new AppBar(
-        title: new Text('Stateless Widget'),
-      ),
+      appBar: new AppBar(title: new Text("Stateful Widget!"), backgroundColor: Colors.deepOrange),
       body: new Container(
-        padding: new EdgeInsets.all(20.0),
-        child: new Column(
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            new MyCard(
-              title: new Text("I Love Flutter", style: new TextStyle(fontSize: 20.0)),
-              icon: new Icon(Icons.favorite, size: 40.0, color: Colors.redAccent)
-            ),
-            new MyCard(
-              title: new Text("I Love Donuts", style: new TextStyle(fontSize: 20.0)),
-              icon: new Icon(Icons.donut_large, size: 40.0, color: Colors.brown)
-            ),
-            new MyCard(
-              title: new Text("I See You", style: new TextStyle(fontSize: 20.0)),
-              icon: new Icon(Icons.visibility, size: 40.0, color: Colors.blue)
-            ),
-          ],
-        ),
-      ),
-    );
-  }  
-}
-
-class MyCard extends StatelessWidget {
-  MyCard({this.title, this.icon});
-
-  final Widget title;
-  final Widget icon;
-
-  @override
-  Widget build(BuildContext context) {
-    return new Container(
-      padding: new EdgeInsets.only(bottom: 20.0),
-      child: new Card(
-        child: new Container(
-          padding: new EdgeInsets.all(15.0),
+        child: new Center(
           child: new Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              this.title,
-              this.icon
+              new Text(displayedString, style: new TextStyle(fontSize: 30.0, fontWeight: FontWeight.bold)),
+              new Padding(padding: new EdgeInsets.all(15.0),),
+              new RaisedButton(
+                child: new Text("Press Me!", style: new TextStyle(color: Colors.white, fontStyle: FontStyle.italic, fontSize: 20.0),),
+                color: Colors.red,
+                onPressed: onPressed,
+              )
             ],
           ),
         ),
