@@ -12,6 +12,8 @@ class MyTextInput extends StatefulWidget {
 }
 
 class MyTextInputState extends State<MyTextInput> {
+  final TextEditingController controller = new TextEditingController();
+
   String result = '';
 
   @override
@@ -29,9 +31,11 @@ class MyTextInputState extends State<MyTextInput> {
                 ),
                 onSubmitted: (String str) {
                   setState(() {
-                    result = str;
+                    result = result + '\n' + str;
                   });
-                }
+                  controller.text = "";
+                },
+                controller: controller,
               ),
               new Text(result)
             ],
