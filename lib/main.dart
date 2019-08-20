@@ -3,46 +3,58 @@ import 'package:flutter/material.dart';
 void main() {
   runApp(
     new MaterialApp(
-      home: new MyApp(),
+      home: new HomePage(),
+      routes: <String, WidgetBuilder> {
+        "/SecondPage": (BuildContext context) => new SecondPage()
+      }
     )
   );
 }
 
-class MyApp extends StatefulWidget {
-  @override
-  AwesomeButtonState createState() => new AwesomeButtonState();
-}
-
-class AwesomeButtonState extends State<MyApp> {
-  int counter = 0;
-  List<String> strings = ["Flutter", "Is", "Awesome"];
-  String displayedString = "";
-
-  void onPressed() {
-    setState(() {
-      displayedString = strings[counter];
-      counter = counter < 2 ? counter+1 : 0;
-    });
-  }
-
+class HomePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      appBar: new AppBar(title: new Text("Stateful Widget!"), backgroundColor: Colors.deepOrange),
+      appBar: new AppBar(title: new Text("Home Page"), backgroundColor: Colors.deepOrange,),
       body: new Container(
         child: new Center(
           child: new Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              new Text(displayedString, style: new TextStyle(fontSize: 30.0, fontWeight: FontWeight.bold)),
-              new Padding(padding: new EdgeInsets.all(15.0),),
-              new RaisedButton(
-                child: new Text("Press Me!", style: new TextStyle(color: Colors.white, fontStyle: FontStyle.italic, fontSize: 20.0),),
-                color: Colors.red,
-                onPressed: onPressed,
-              )
+              new IconButton(
+                icon: new Icon(Icons.home, color: Colors.blue),
+                iconSize: 70.0,
+                onPressed: () {
+                  Navigator.of(context).pushNamed("/SecondPage");
+                },
+              ),
+              new Text("Home")
+            ]
+          )
+        )
+      )
+    );
+  }
+}
+
+class SecondPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return new Scaffold(
+      appBar: new AppBar(title: new Text("Second Page"), backgroundColor: Colors.deepOrange),
+      body: new Container(
+        child: new Center(
+          child: new Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              new IconButton(
+                icon: new Icon(Icons.favorite, color: Colors.redAccent),
+                iconSize: 70.0,
+                onPressed: null,
+              ),
+              new Text("Second Page")
             ],
-          ),
+          )
         ),
       ),
     );
