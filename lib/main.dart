@@ -27,7 +27,7 @@ class MyTextInputState extends State<MyTextInput> {
                 decoration: new InputDecoration(
                   hintText: "Type in here"
                 ),
-                onChanged: (String str) {
+                onSubmitted: (String str) {
                   setState(() {
                     result = str;
                   });
