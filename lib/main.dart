@@ -1,47 +1,53 @@
 import 'package:flutter/material.dart';
+import './FirstPage.dart' as first;
+import './SecondPage.dart' as second;
+import './ThirdPage.dart' as third;
 
 void main() {
-  runApp(new MaterialApp(
-    home: new MyTextInput()
-  ));
+  runApp(new MaterialApp(home: new MyApp()));
 }
 
-class MyTextInput extends StatefulWidget {
+class MyApp extends StatefulWidget {
   @override
-  MyTextInputState createState() => new MyTextInputState();
+  MyTabState createState() => new MyTabState();
 }
 
-class MyTextInputState extends State<MyTextInput> {
-  final TextEditingController controller = new TextEditingController();
+class MyTabState extends State<MyApp> with SingleTickerProviderStateMixin {
+  TabController controller;
 
-  String result = '';
+  @override
+  void initState() {
+    super.initState();
+    controller = new TabController(vsync: this, length: 3);
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return new Scaffold(
-      appBar: new AppBar(title: new Text("Input Text"), backgroundColor: Colors.deepOrange),
-      body: new Container(
-        child: new Center(
-          child: new Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              new TextField(
-                decoration: new InputDecoration(
-                  hintText: "Type in here"
-                ),
-                onSubmitted: (String str) {
-                  setState(() {
-                    result = result + '\n' + str;
-                  });
-                  controller.text = "";
-                },
-                controller: controller,
-              ),
-              new Text(result)
-            ],
-          ),
-        ),
-      ),
-    );
+        appBar: new AppBar(
+            title: new Text("Tab Navigation"),
+            backgroundColor: Colors.deepOrange,
+            bottom: new TabBar(
+              controller: controller,
+              tabs: <Widget>[
+                new Tab(icon: new Icon(Icons.home)),
+                new Tab(icon: new Icon(Icons.chat)),
+                new Tab(icon: new Icon(Icons.settings)),
+              ],
+            )),
+        body: new TabBarView(
+          controller: controller,
+          children: <Widget>[
+            new first.First(),
+            new second.Second(),
+            new third.Third()
+          ],
+        ));
   }
 }
