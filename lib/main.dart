@@ -1,6 +1,5 @@
 import 'dart:async';
-import 'dart:convert'; //it allows us to convert our json to a list
-
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
@@ -17,32 +16,47 @@ class HomePage extends StatefulWidget {
 
 class HomePageState extends State<HomePage> {
 
-  //this async func will get data from the internet
-  //when our func is done we return a string
+  List data;
+
   Future<String> getData() async {
-    //we have to wait to get the data so we use 'await'
-    http.Response response = await http.get(
-      //Uri.encodeFull removes all the dashes or extra characters present in our Uri
+    var response = await http.get(
       Uri.encodeFull("https://jsonplaceholder.typicode.com/posts"),
       headers: {
-        //if your api require key then pass your key here as well e.g "key": "my-long-key"
-       "Accept": "application/json" 
+        "Accept": "application/json"
       }
     );
-    List data = jsonDecode(response.body);
-    print(data[0]["title"]);
+
+    this.setState(() {
+      data = jsonDecode(response.body);
+    });
+    
+    print(data[1]["title"]);
+    
+    return "Success!";
+  }
+
+  @protected
+  @mustCallSuper
+  void initState(){
+    super.initState();
+    this.getData();
   }
 
   @override
   Widget build(BuildContext context){
     return new Scaffold(
-      appBar: new AppBar(title: new Text("Stateful Widget!"), backgroundColor: Colors.deepOrange),
-      body: new Center(
-        child: new RaisedButton(
-              child: new Text("Get data!", style: new TextStyle(color: Colors.white, fontStyle: FontStyle.italic, fontSize: 20.0)),
-              onPressed: getData
-        )
-      )
+      appBar: new AppBar(title: new Text("List Views"), backgroundColor: Colors.blue),
+      body: new ListView.builder(
+        itemCount: data == null ? 0 : data.length,
+        itemBuilder: (BuildContext context, int index){
+          return new Card(
+            child: Padding(
+              padding: EdgeInsets.all(12.0),
+              child: Text(data[index]["title"]),
+            )
+          );
+        }
+      ),
     );
   }
 }
