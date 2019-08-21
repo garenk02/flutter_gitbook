@@ -1,53 +1,48 @@
+import 'dart:async';
+import 'dart:convert'; //it allows us to convert our json to a list
+
 import 'package:flutter/material.dart';
-import './FirstPage.dart' as first;
-import './SecondPage.dart' as second;
-import './ThirdPage.dart' as third;
+import 'package:http/http.dart' as http;
 
 void main() {
-  runApp(new MaterialApp(home: new MyApp()));
+  runApp(new MaterialApp(
+    home: new HomePage()
+  ));
 }
 
-class MyApp extends StatefulWidget {
+class HomePage extends StatefulWidget {
   @override
-  MyTabState createState() => new MyTabState();
+  HomePageState createState() => new HomePageState();
 }
 
-class MyTabState extends State<MyApp> with SingleTickerProviderStateMixin {
-  TabController controller;
+class HomePageState extends State<HomePage> {
 
-  @override
-  void initState() {
-    super.initState();
-    controller = new TabController(vsync: this, length: 3);
+  //this async func will get data from the internet
+  //when our func is done we return a string
+  Future<String> getData() async {
+    //we have to wait to get the data so we use 'await'
+    http.Response response = await http.get(
+      //Uri.encodeFull removes all the dashes or extra characters present in our Uri
+      Uri.encodeFull("https://jsonplaceholder.typicode.com/posts"),
+      headers: {
+        //if your api require key then pass your key here as well e.g "key": "my-long-key"
+       "Accept": "application/json" 
+      }
+    );
+    List data = jsonDecode(response.body);
+    print(data[0]["title"]);
   }
 
   @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context){
     return new Scaffold(
-        appBar: new AppBar(
-            title: new Text("Tab Navigation"),
-            backgroundColor: Colors.deepOrange,
-            bottom: new TabBar(
-              controller: controller,
-              tabs: <Widget>[
-                new Tab(icon: new Icon(Icons.home)),
-                new Tab(icon: new Icon(Icons.chat)),
-                new Tab(icon: new Icon(Icons.settings)),
-              ],
-            )),
-        body: new TabBarView(
-          controller: controller,
-          children: <Widget>[
-            new first.First(),
-            new second.Second(),
-            new third.Third()
-          ],
-        ));
+      appBar: new AppBar(title: new Text("Stateful Widget!"), backgroundColor: Colors.deepOrange),
+      body: new Center(
+        child: new RaisedButton(
+              child: new Text("Get data!", style: new TextStyle(color: Colors.white, fontStyle: FontStyle.italic, fontSize: 20.0)),
+              onPressed: getData
+        )
+      )
+    );
   }
 }
